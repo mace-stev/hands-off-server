@@ -1,6 +1,6 @@
 const fs = require('fs');
 const fileupload = require("express-fileupload");
-
+const path=require('node:path')
 
 exports.recording = (req, res) => {
   let fileData = []
@@ -15,7 +15,8 @@ exports.recording = (req, res) => {
      resolve(files.forEach((element) => {
      
        if((fs.statSync(`${req.body.recordingFolder}\\${element}`).mtimeMs)>time-6000){
-        return fileData.push(element)
+        
+        return fileData.push(element, fs.statSync(`${req.body.recordingFolder}\\${element}`))
        }
 
 
@@ -23,10 +24,19 @@ exports.recording = (req, res) => {
       }))
     })})
       .then((data) => {
-      console.log(fileData)
-        res.status(201).json(fileData)
+      
+      
+      const completePath=(`${req.body.recordingFolder}\\${fileData[0]}`)
+      
+      res.setHeader('Content-Type', 'video/mp4')
+      res.setHeader('Content-Length', `${fileData[1].size}`)
+      data=fs.createReadStream(completePath)
+        res.status(201)
+        data.pipe(res)
+        
       })
       .catch((err) => {
+       
         res.status(400).json(`Error creating post: ${err}`)
       })
   
