@@ -10,6 +10,7 @@ app.use(fileupload());
 app.use(cors());
 app.use(express.json());
 app.use('/', videoRoutes)
+app.use(express.static('./public'))
 app.listen(8080, ()=>{
     console.log(`App listening at ${BACKEND_URL}${8080}`)
 })
