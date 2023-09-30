@@ -16,6 +16,7 @@
     "express-fileupload": "^1.4.0",
     "fs": "^0.0.1-security",
     "knex": "^2.5.1",
+    "newrelic": "^11.1.0",
     "nodemon": "^3.0.1",
     "obs-websocket-js": "^5.0.3",
     "react": "^18.2.0",
@@ -25,7 +26,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "npx nodemon",
+    "start": "node index.js && node -r newrelic index.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
