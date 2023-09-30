@@ -51,3 +51,6 @@ exports.recording = (req, res) => {
       })
   
 }
+exports.testing=(req,res)=>{
+  res.json('I\'m listening')
+}

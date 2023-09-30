@@ -3,7 +3,9 @@ const videosController = require('../controllers/videosController')
 
 router
 .route('/')
+.get(videosController.testing)
 .post(videosController.recording);
+
 
 
 
