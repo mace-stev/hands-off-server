@@ -32,7 +32,7 @@
     "start": "npm run server && npm run frontend",
     "server": "npm i && node index.js && node -r newrelic index.js",
     "frontend": "cd hands-off-frontend && npm i && npm start",
-    "heroku-postbuild": "cd hands-off-frontend && npm run build",
+    "build": "cd hands-off-frontend && npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "migrate": "knex migrate:latest",
