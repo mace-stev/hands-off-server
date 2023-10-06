@@ -2,7 +2,7 @@ const router = require("express").Router();
 const videosController = require('../controllers/videosController')
 
 router
-.route('/vid')
+.route('/')
 .get(videosController.testing)
 .post(videosController.recording);
 
