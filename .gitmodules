@@ -1,0 +1,3 @@
+[submodule "hands-off-frontend"]
+	path = hands-off-frontend
+	url = https://github.com/mace-stev/hands-off-frontend.git
