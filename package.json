@@ -30,7 +30,7 @@
   },
   "scripts": {
     "start": "npm run frontend && npm run server",
-    "server": "node index.js && node -r newrelic index.js",
+    "server": "node -r newrelic index.js",
     "frontend": "cd hands-off-frontend && npm start",
      "build": "cd hands-off-frontend && npm i && npm run build",
     "test": "react-scripts test",
