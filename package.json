@@ -29,10 +29,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "npm run server && npm run frontend",
-    "server": "npm i && node index.js && node -r newrelic index.js",
-    "frontend": "cd hands-off-frontend && npm i && npm start",
-    "build": "cd hands-off-frontend && npm run build",
+    "start": "npm run server & npm run frontend",
+    "server": "node index.js && node -r newrelic index.js",
+    "frontend": "cd hands-off-frontend && npm start",
+     "build": "cd hands-off-frontend && npm i && npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "migrate": "knex migrate:latest",
