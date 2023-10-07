@@ -18,7 +18,7 @@ app.use('/api', profileRoutes)
 app.use(express.static(path.join(__dirname, 'hands-off-frontend/build')));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/hands-off-frontend/build/index.html'));
+  res.sendFile(path.resolve(__dirname+'/hands-off-frontend/build/index.html'));
 });
 console.log("starting")
 app.listen(process.env.PORT || 3000, () => {
