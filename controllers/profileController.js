@@ -10,9 +10,20 @@ exports.signup=(req, res)=>{
               return callback(err, hash);
             });
           });
+          signUp(function(err, hash) {
+            if (err) {
+              console.error(err);
+              return res.status(500).send('Internal server error');
+            }
+        
+            // Store the hashed password in the database
+            console.log(hash);
+            res.send('Password hashed successfully');
+          });
+        };
     }
 
-}
+
 exports.verify=(req,res)=>{
     bcrypt.compare(req.body.password, hashword, function(err, isPasswordMatch) {   
         return err == null ?

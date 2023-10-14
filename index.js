@@ -2,19 +2,20 @@ const express=require('express');
 const fileupload = require("express-fileupload");
 const app = express();
 const cors= require('cors')
+app.use(cors());
 const path = require('path');
 require('dotenv').config()
 
 
 const videoRoutes=require('./routes/videosRoute')
 const profileRoutes=require('./routes/profileRoute')
-const port= process.env.PORT || 8000
-
+const authRoutes=require("./routes/authRoute")
+const port= process.env.PORT || 3000
 app.use(fileupload());
-app.use(cors());
 app.use(express.json());
 app.use('/api', videoRoutes)
 app.use('/api', profileRoutes)
+app.use('/api', authRoutes)
 
 app.use(express.static('hands-off-frontend/build'));
 
