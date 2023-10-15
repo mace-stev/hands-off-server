@@ -5,11 +5,12 @@ const path=require('node:path')
 exports.recording = (req, res) => {
   let fileData = []
   const postData = req.body
+  console.log(req.body)
   return new Promise((resolve, reject) => {
     fs.readdir(`${req.body.recordingFolder}`, (err, files) => {
       if (err) {
-        console.log(err)
-        reject(err)
+        console.log("videosController.js line 12: "+ err)
+        reject("videosController.js line 12: "+ err)
       }
       const time =new Date().getTime();
      resolve(files.forEach((element) => {
@@ -26,7 +27,7 @@ exports.recording = (req, res) => {
       .then((data) => {
       
       const completePath=(`${req.body.recordingFolder}\\${fileData[0]}`)
-       
+       console.log(completePath)
       const formData = new FormData();
       const axios=require('axios')
       axios.defaults.headers.common = null;
@@ -37,7 +38,7 @@ exports.recording = (req, res) => {
       const contentLength=formData.getLengthSync()
         return axios.post('https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet&mine=true', formData, { headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${req.body.params['access_token']}`,'Content-Length': contentLength }})
         .catch((err)=>{
-          console.log(err)
+          console.log(err+" videosController.js line 41")
         })
         
       }).then((result)=>{
@@ -46,8 +47,9 @@ exports.recording = (req, res) => {
       })
       .catch((err) => {
       
-       console.log(req.body.params['access_token'])
-        res.status(400).json(`Error creating post: ${err}`)
+      
+       console.log(req.body.params1)
+        res.status(400).json(`(videosController.js line 51): Error creating post: ${err}`)
       })
   
 }
