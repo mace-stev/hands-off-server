@@ -6,6 +6,7 @@ exports.recording = (req, res) => {
   let fileData = []
   const postData = req.body
   console.log(postData)
+  console.log(req.headers)
   return new Promise((resolve, reject) => {
     fs.readdir(`${req.body.recordingFolder}`, (err, files) => {
       if (err) {
