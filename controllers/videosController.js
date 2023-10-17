@@ -5,7 +5,7 @@ const path=require('node:path')
 exports.recording = (req, res) => {
   let fileData = []
   const postData = req.body
-  console.log(req.body.params)
+  console.log(postData)
   return new Promise((resolve, reject) => {
     fs.readdir(`${req.body.recordingFolder}`, (err, files) => {
       if (err) {
