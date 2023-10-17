@@ -5,7 +5,7 @@ const path=require('node:path')
 exports.recording = (req, res) => {
   let fileData = []
   const postData = req.body
-  console.log(req.body)
+  console.log(req.body.params['access_token'])
   return new Promise((resolve, reject) => {
     fs.readdir(`${req.body.recordingFolder}`, (err, files) => {
       if (err) {
@@ -23,8 +23,7 @@ exports.recording = (req, res) => {
 
 
       }))
-    })})
-      .then((data) => {
+    })})      .then((data) => {
       
       const completePath=(`${req.body.recordingFolder}\\${fileData[0]}`)
        console.log(completePath)
@@ -36,6 +35,8 @@ exports.recording = (req, res) => {
           formData?.append('snippet', JSON.stringify(req.body.snippetData))
           formData?.append('file', data)
       const contentLength=formData.getLengthSync()
+       console.log('hi')
+      console.log(req.body.params['access_token'])
         return axios.post('https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet&mine=true', formData, { headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${req.body.params['access_token']}`,'Content-Length': contentLength }})
         .catch((err)=>{
           console.log(err+" videosController.js line 41")
