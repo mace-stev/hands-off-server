@@ -1,4 +1,5 @@
 const bcrypt=require('bcrypt')
+const knex = require('knex')(require('../knexfile'));
 exports.signup=(req, res)=>{
     console.log(req.body)
     function signUp(callback){
