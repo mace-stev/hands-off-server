@@ -7,6 +7,7 @@ module.exports={
       user: process.env.STACKHERO_MYSQL_USER,
       password: process.env.STACKHERO_MYSQL_ROOT_PASSWORD,
       database: process.env.STACKHERO_MYSQL_DATABASE,
+      ssl:{}
     }
   }
 
