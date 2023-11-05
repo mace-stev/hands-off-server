@@ -9,8 +9,9 @@ exports.recording = (req, res) => {
   let fileData = []
   const stats = []
   let uploadedBytes = 0;
-
+  
   const postData = req.body
+  console.log(req.body)
   new Promise((resolve, reject) => {
     fs.readdir(`${req.body.recordingFolder}`, (err, files) => {
       if (err) {
@@ -34,8 +35,8 @@ exports.recording = (req, res) => {
   }).then((response) => {
     console.log(response)
     const completePath = (`${req.body.recordingFolder}\\${response}`)
-    console.log(completePath)
-    const formData = new FormData();
+    const formData= new FormData()
+    console.log(completePath);
     axios.defaults.headers.common = null;
     const data = fs.createReadStream(completePath)
     progressBar.start(fileData[0].size, 0);
@@ -46,26 +47,25 @@ exports.recording = (req, res) => {
     data.on('end', () => {
       progressBar.stop();
     });
+    console.log(req.body.snippetData)
+    
+    
     formData?.append('snippet', JSON.stringify(req.body.snippetData))
     formData?.append('video', data)
-    formData?.append('status', JSON.stringify({
-      privacyStatus: 'private',
-      selfDeclaredMadeForKids: true,
-      madeForKids: false
-    })
-    )
-    /*    const contentLength=formData.getLengthSync() */
-    return axios.post('https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status&mine=true', formData, { headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `${req.headers.authorization}` } })
-  })
-    .then((result) => {
-      console.log(result)
-      res.status(201).json(`Successfully posted the video: ${result}`)
-    })
-    .catch((err) => {
-      console.log(err + " line 42")
-      res.status(400).json(`(videosController.js line 51): Error creating post: ${err}`)
-    })
-}
-exports.testing = (req, res) => {
+
+    
+    return axios.post('https://www.googleapis.com/upload/youtube/v3/videos?uploadType=multipart&part=snippet&mine=true', formData, { headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `${req.headers.authorization}` } })
+      .then((result) => {
+        console.log(result);
+        res.status(201).json(`Successfully posted the video: ${result}`);
+      })
+      .catch((err) => {
+        console.log(err + " line 51");
+        res.status(500).json(`(videosController.js line 64): Error uploading video: ${err}`);
+      });
+  });
+};
+  
+  exports.testing = (req, res) => {
   res.json("I\'m listening")
 }
