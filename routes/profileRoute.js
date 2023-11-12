@@ -4,7 +4,8 @@ const profileController = require('../controllers/profileController');
 
 router
 .route('/profile')
-.post(profileController.signup);
+.post(profileController.signup)
+
 
 
 

@@ -1,47 +1,41 @@
 const bcrypt = require('bcrypt')
 const knex = require('knex')(require('../knexfile'));
-exports.signup = (req, res) => {
-  console.log(req.body)
-  function signUp(callback) {
-    bcrypt.genSalt(12, function (err, salt) {
-      if (err)
-        return callback(err);
+const { v4: uuidv4 } = require("uuid");
 
-      bcrypt.hash(req.body.password, salt, function (err, hash) {
-        return callback(err, hash);
-      });
-    });
-    signUp(function (err, hash) {
-      if (err) {
-        console.error(err);
-        return res.status(500).send('Internal server error');
-      }
-      const profile = {
-        username: req.body.username,
-        '#': hash
-      }
-      // Store the hashed password in the database
-      knex('user-profile').insert(profile)
-        .returning('id')
-        .then((response) => {
-          console.log('success')
-          console.log(response)
-        })
-    });
-  };
+exports.signup = async (req, res) => {
+  try {
+    const salt = await bcrypt.genSalt(12);
+    const hash = await bcrypt.hash(req.body.password, salt);
+
+    const profile = {
+      id: uuidv4(),
+      username: req.body.username,
+      '#': hash
+    };
+
+    await knex('user-profile').insert(profile);
+    
+    res.status(200).send('successfully signed-up');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
 }
 
 
-exports.verify = (req, res) => {
-  knex('user-profile')
-    .select('#')
-    .where(username, req.body.username)
-    .then((data) => {
-      bcrypt.compare(req.body.password, data, function (err, isPasswordMatch) {
-        return err == null ?
-          callback(null, isPasswordMatch) :
-          callback(err);
-      })
-    });
-};
+exports.editProfile = async (req, res) => {
+  const ableToChange = ['obsPort', 'obsUrl', 'social-links']
+  const elementsChanged=[]
+  let data = Object.keys(req.body)
 
+  data.forEach((element) => {
+    if (element.toString() === ableToChange[0] || element.toString() === ableToChange[1] || element.toString() === ableToChange[2]) {
+      knex("user-profile").update(element.toString(), req.body[element.toString()])
+      elementsChanged.push(element.toString())
+    }
+
+  })
+  elementsChanged.forEach((element)=>{
+    res.status(200).send(`${element} updated`)
+  })
+}
