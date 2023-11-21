@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const knex = require('knex')(require('../knexfile'));
 const { v4: uuidv4 } = require("uuid");
-
+const jwt = require('jsonwebtoken')
 exports.signup = async (req, res) => {
   try {
     const salt = await bcrypt.genSalt(12);
@@ -14,7 +14,7 @@ exports.signup = async (req, res) => {
     };
 
     await knex('user-profile').insert(profile);
-    
+
     res.status(200).send('successfully signed-up');
   } catch (error) {
     console.error(error);
@@ -24,18 +24,20 @@ exports.signup = async (req, res) => {
 
 
 exports.editProfile = async (req, res) => {
-  const ableToChange = ['obsPort', 'obsUrl', 'social-links']
-  const elementsChanged=[]
-  let data = Object.keys(req.body)
+  if (jwt.verify(req.headers.authorization, process.env.SECRET_KEY)) {
+    const ableToChange = ['obsPort', 'obsUrl', 'social-links']
+    const elementsChanged = []
+    let data = Object.keys(req.body)
 
-  data.forEach((element) => {
-    if (element.toString() === ableToChange[0] || element.toString() === ableToChange[1] || element.toString() === ableToChange[2]) {
-      knex("user-profile").update(element.toString(), req.body[element.toString()])
-      elementsChanged.push(element.toString())
-    }
+    data.forEach((element) => {
+      if (element.toString() === ableToChange[0] || element.toString() === ableToChange[1] || element.toString() === ableToChange[2]) {
+        knex("user-profile").update(element.toString(), req.body[element.toString()])
+        elementsChanged.push(element.toString())
+      }
 
-  })
-  elementsChanged.forEach((element)=>{
-    res.status(200).send(`${element} updated`)
-  })
+    })
+    elementsChanged.forEach((element) => {
+      res.status(200).send(`${element} updated`)
+    })
+  }
 }

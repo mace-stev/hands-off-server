@@ -5,6 +5,7 @@ const profileController=require('../controllers/profileController')
 router
 .route("/auth")
 .post(authController.verify)
+.get(authController.categories);
 
 
 module.exports=router
