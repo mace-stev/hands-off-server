@@ -6,7 +6,9 @@ exports.signup = async (req, res) => {
   try {
     const salt = await bcrypt.genSalt(12);
     const hash = await bcrypt.hash(req.body.password, salt);
-
+    if (await knex('user-profile').select('username').where('username', req.body.username)) {
+      throw new Error('username already taken')
+    }
     const profile = {
       id: uuidv4(),
       username: req.body.username,
@@ -18,7 +20,11 @@ exports.signup = async (req, res) => {
     res.status(200).send('successfully signed-up');
   } catch (error) {
     console.error(error);
-    res.status(500).send('Internal server error');
+    if (error.message === 'username already taken') {
+      res.status(400).send(error.message);
+    } else {
+      res.status(500).send('Internal server error');
+    }
   }
 }
 

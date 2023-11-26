@@ -4,7 +4,7 @@ const knex = require('knex')(require('../knexfile'));
 const bcrypt = require('bcrypt')
 const axios = require('axios')
 exports.categories = (req, res) => {
-  console.log(jwt.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY))
+ 
   if(jwt.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY)) {
     const categories = [];
     axios.get(`https://youtube.googleapis.com/youtube/v3/videoCategories?part=snippet&regionCode=US&key=${process.env.API_KEY}`).then((response) => {
@@ -30,8 +30,12 @@ exports.categories = (req, res) => {
 }
 exports.verify = async (req, res) => {
   const id = await knex('user-profile').select('id').where('username', req.body.username)
-  function generateJWTToken(userId) {
-    const token = jwt.sign({ id: userId }, process.env.SECRET_KEY, {
+  const obsPort= await knex('user-profile').select('obsPort').where('username', req.body.username)
+  const obsUrl= await knex('user-profile').select('obsUrl').where('username', req.body.username)
+  function generateJWTToken(userId, port, url) {
+    const token = jwt.sign({ id: userId,
+    obsPort: port, 
+  obsUrl: url}, process.env.SECRET_KEY, {
       expiresIn: '1h',
     });
     return token;
@@ -42,7 +46,7 @@ exports.verify = async (req, res) => {
     const hash = await bcrypt.hash(req.body.stateToHash.toString(), 16)
 
     if (isPasswordMatch) {
-      res.setHeader('Authorization', `Bearer ${generateJWTToken(id)}`);
+      res.setHeader('Authorization', `Bearer ${generateJWTToken(id, obsPort, obsUrl)}`);
       res.status(200).send(hash);
     } else {
       res.status(401).send('Invalid credentials');
