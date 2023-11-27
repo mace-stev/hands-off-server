@@ -5,6 +5,7 @@ const profileController = require('../controllers/profileController');
 router
 .route('/profile')
 .post(profileController.signup)
+.put(profileController.editProfile);
 
 
 
