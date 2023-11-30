@@ -9,12 +9,14 @@ require('dotenv').config()
 const videoRoutes=require('./routes/videosRoute')
 const profileRoutes=require('./routes/profileRoute')
 const authRoutes=require("./routes/authRoute")
+const obsRoutes=require("./routes/obsRoute")
 const port= process.env.PORT || 3000
 app.use(fileupload());
 app.use(express.json());
 app.use('/api', videoRoutes)
 app.use('/api', profileRoutes)
 app.use('/api', authRoutes)
+app.use('/api', obsRoutes)
 
 app.use(express.static('hands-off-frontend/build'));
 knex.raw('SELECT 1+1 AS result').then(() => {
