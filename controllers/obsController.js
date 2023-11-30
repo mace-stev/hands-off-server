@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 const obs = require('obs-websocket-js');
-
+const jwt = require('jsonwebtoken')
 exports.obs = (req, res) => {
     if (jwt.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY)) {
         const cert = Buffer.from(process.env.CERT, 'base64').toString('utf8');
