@@ -3,7 +3,7 @@ const obsController=require('../controllers/obsController');
 
 router
 .route("/obs")
-.post(obsController.obs);
+.post(obsController.OBS);
 
 
 
