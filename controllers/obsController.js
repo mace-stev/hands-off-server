@@ -12,17 +12,17 @@ exports.OBS = (req, res) => {
         const options = {
             host: 'localhost',
             port: req.body.obsPort.toString(),
-            password: req.body.password.toString(),
+            
             tls: {
                 cert: cert,
                 key: privateKey
             }
         };
-        const url = `wss://${options.host}:${options.port}`
+        const url = `wss://${options.host}:${options.port.toString()}`
        
         const wsClient = new WebSocket(url,options);
         try {
-            OBS.createConnection(wsClient, options).then((response)=>{
+            OBS.createConnection(url, options).then((response)=>{
                 console.log(response)
             }).catch((error)=>{
                 console.log(error)
