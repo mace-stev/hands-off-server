@@ -1,4 +1,4 @@
-const WebSocket = require('ws');
+
 const obs=require('obs-websocket-js')
 const jwt = require('jsonwebtoken');
 const { default: OBSWebSocket } = require('obs-websocket-js');
@@ -12,23 +12,23 @@ exports.OBS = (req, res) => {
         const options = {
             host: 'localhost',
             port: req.body.obsPort.toString(),
-            
+            password: req.body.password.toString(),
             tls: {
                 cert: cert,
                 key: privateKey
             }
         };
-        const url = `wss://${options.host}:${options.port.toString()}`
+        const url = `ws://${options.host}:${options.port.toString()}`
        
-        const wsClient = new WebSocket(url,options);
+       
         try {
             OBS.createConnection(url, options).then((response)=>{
-                console.log(response)
+              
+                res.status(201).send({response:response, completeUrl: url})
+                OBS.disconnect()
             }).catch((error)=>{
                 console.log(error)
             });
-            console.log(url)
-            res.status(201).send('successfully connected to obs')
           } catch (error) {
             console.error('Error connecting to OBS:', error);
             res.status(500).send('Failed to connect to OBS');
