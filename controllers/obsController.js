@@ -10,9 +10,9 @@ exports.OBS = (req, res) => {
         const privateKey = Buffer.from(process.env.PRIVATE_KEY, 'base64').toString('utf8');
       
         const options = {
-            host: req.body.obsUrl,
-            port: req.body.obsPort,
-            password: req.body.password,
+            host: 'localhost',
+            port: req.body.obsPort.toString(),
+            password: req.body.password.toString(),
             tls: {
                 cert: cert,
                 key: privateKey
@@ -22,7 +22,11 @@ exports.OBS = (req, res) => {
        
         const wsClient = new WebSocket(url,options);
         try {
-            OBS.createConnection(wsClient, options);
+            OBS.createConnection(wsClient, options).then((response)=>{
+                console.log(response)
+            }).catch((error)=>{
+                console.log(error)
+            });
             console.log(url)
             res.status(201).send('successfully connected to obs')
           } catch (error) {
