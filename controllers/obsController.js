@@ -18,7 +18,7 @@ exports.OBS = (req, res) => {
                 key: privateKey
             }
         };
-        const url = `ws://${options.host}:${options.port.toString()}`
+        const url = `wss://${options.host}:${options.port.toString()}`
        
        
         try {
