@@ -52,7 +52,7 @@ exports.verify = async (req, res) => {
     const hash = await bcrypt.hash(req.body.stateToHash.toString(), 16)
 
     if (isPasswordMatch) {
-      res.setHeader('Authorization', `Bearer ${generateJWTToken(id, obsPort, obsUrl)}`);
+      res.setHeader('Authorization', `Bearer ${generateJWTToken(id, obsPort)}`);
       res.status(200).send(hash);
     } else {
       res.status(401).send('Invalid credentials');
