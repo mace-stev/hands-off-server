@@ -1,37 +1,58 @@
-
-const obs=require('obs-websocket-js')
+const ngrok = require('@ngrok/ngrok')
+const url = require('url')
 const jwt = require('jsonwebtoken');
 const { default: OBSWebSocket } = require('obs-websocket-js');
+const http = require('http')
+const OBS = new OBSWebSocket()
+exports.OBS = async (req, res) => {
+    let ngrokUrl
 
-exports.OBS = (req, res) => {
-    const OBS= new OBSWebSocket()
     if (jwt.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY)) {
-        const cert = Buffer.from(process.env.CERT, 'base64').toString('utf8');
-        const privateKey = Buffer.from(process.env.PRIVATE_KEY, 'base64').toString('utf8');
-      
+        await ngrok.forward({
+            addr: 'localhost:4455',
+            auth: process.env.NGROK_AUTHTOKEN
+        }).then((response) => {
+            console.log(response)
+            console.log(`Ngrok tunnel started: ${response.url()}`)
+            ngrokUrl = response.url();
+        })
         const options = {
             host: 'localhost',
             port: req.body.obsPort.toString(),
             password: req.body.password.toString(),
-            tls: {
-                cert: cert,
-                key: privateKey
-            }
         };
-        const url = `ws://${options.host}:${options.port.toString()}`
-       
-       
+        const url = `ws://${options.host}:${options.port.toString()}`;
+        let obsAuth
         try {
-            OBS.createConnection(url, options).then((response)=>{
-              
-                res.status(201).send({response:response, completeUrl: url})
-                OBS.disconnect()
-            }).catch((error)=>{
+            OBS.createConnection(ngrokUrl, options).then((result) => {
+                obsAuth = result
+                OBS.connect(ngrokUrl, options.password.toString(), result).then((response) => {
+                    console.log(response)
+                    OBS.call('GetRecordDirectory').then((response) => {
+                      res.status(201).send(response) 
+                    }).catch((error) => {
+                        console.log(error)
+                    })
+                }).catch((error) => {
+                    console.log(error)
+                })
+            }).catch((error) => {
                 console.log(error)
             });
-          } catch (error) {
+        } catch (error) {
             console.error('Error connecting to OBS:', error);
             res.status(500).send('Failed to connect to OBS');
-          }
+        }
+    }
+}
+exports.streamStatus = async(req, res)=>{
+
+    if (jwt.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY)) {
+        res.setHeader('Content-Type', 'application/json');
+        OBS.on('StreamStateChanged', (data) => {
+            if(data.outputState === 'OBS_WEBSOCKET_OUTPUT_STOPPING') {
+             res.status(201).send({streamOver: true})
+            }
+        })
     }
 }
