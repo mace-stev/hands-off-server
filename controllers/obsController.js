@@ -23,11 +23,15 @@ exports.OBS = async (req, res) => {
             let store = response.url().split("/");
             ngrokUrl=store[2]
             
+        }).catch((error)=>{
+            console.log(error+ 'error creating ngrok tunnel')
         })
         let obsAuth
         try {
+            console.log(`wss://${ngrokUrl}`)
             OBS.createConnection(`wss://${ngrokUrl}`).then((result) => {
                 obsAuth = result
+                console.log(result)
                 OBS.connect(`wss://${ngrokUrl}`, req.body.password.toString(), result).then((response) => {
                     OBS.call('GetRecordDirectory').then((response) => {
                         res.status(201).send(response)
