@@ -13,7 +13,8 @@ exports.OBS = async (req, res) => {
         let tunnelAdr
         await ngrokCli.forward({
             addr: `localhost:${req.body.obsPort.toString()}`,
-            auth: process.env.NGROK_AUTHTOKEN
+            auth: process.env.NGROK_AUTHTOKEN,
+            idle_timeout: 300
         }).then((response) => {
             console.log(response.url().split("/"))
             console.log(`Ngrok tunnel started: ${response.url()}`)
@@ -27,7 +28,7 @@ exports.OBS = async (req, res) => {
         try {
             console.log(`wss://${ngrokUrl}`)
         
-           /* OBS.createConnection(`wss://${ngrokUrl}`).then((result) => {
+           OBS.createConnection(`wss://${ngrokUrl}`).then((result) => {
                 obsAuth = result
                 console.log(result)
                 OBS.connect(`wss://${ngrokUrl}`, req.body.password.toString(), result).then((response) => {
@@ -41,7 +42,7 @@ exports.OBS = async (req, res) => {
                 })
             }).catch((error) => {
                 console.log(error)
-             })*/;
+             });
         } catch (error) {
             console.error('Error connecting to OBS:', error);
             res.status(500).send('Failed to connect to OBS');
