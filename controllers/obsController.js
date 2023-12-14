@@ -11,20 +11,15 @@ exports.OBS = async (req, res) => {
         const apiToken = process.env.NGROK_APITOKEN
         const ngrok = new Ngrok({ apiToken: apiToken })
         let tunnelAdr
-        await ngrokCli.forward({
+       const tunnel= await ngrokCli.forward({
             addr: `localhost:${req.body.obsPort.toString()}`,
             auth: process.env.NGROK_AUTHTOKEN,
-            idle_timeout: 300
-        }).then((response) => {
-            console.log(response.url().split("/"))
-            console.log(`Ngrok tunnel started: ${response.url()}`)
-            let store = response.url().split("/");
-            ngrokUrl=store[2]
-            
-        }).catch((error)=>{
-            console.log(error+ 'error creating ngrok tunnel')
+            labels:'edge=edghts_2ZTDBbOy0wb3AS6DQ3Rv9w3bMsj'
         })
-        let obsAuth
+            console.log(tunnel.url().split("/"))
+            console.log(`Ngrok tunnel started: ${tunnel.url()}`)
+            let store = tunnel.url().split("/");
+            ngrokUrl=store[2]
         try {
             console.log(`wss://${ngrokUrl}`)
         
