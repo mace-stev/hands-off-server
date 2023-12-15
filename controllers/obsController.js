@@ -11,10 +11,12 @@ exports.OBS = async (req, res) => {
         const apiToken = process.env.NGROK_APITOKEN
         const ngrok = new Ngrok({ apiToken: apiToken })
         let tunnelAdr
-       const tunnel= await ngrokCli.forward({
+       const tunnel= await ngrokCli.connect({
             addr: `localhost:${req.body.obsPort.toString()}`,
-            auth: process.env.NGROK_AUTHTOKEN,
-            labels:'edge=edghts_2ZTDBbOy0wb3AS6DQ3Rv9w3bMsj'
+            authtoken: process.env.NGROK_AUTHTOKEN,
+            domain: 'grand-locust-oddly.ngrok-free.app'
+        
+            
         })
             console.log(tunnel.url().split("/"))
             console.log(`Ngrok tunnel started: ${tunnel.url()}`)
