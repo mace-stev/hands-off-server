@@ -8,6 +8,6 @@ router
 
 router
 .route('/obs/stream')
-.post(obsController.streamStatus);
+.get(obsController.streamStatus);
 
 module.exports=router
