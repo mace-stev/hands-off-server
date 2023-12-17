@@ -30,6 +30,7 @@ exports.OBS = async (req, res) => {
             OBS.createConnection(`wss://${ngrokUrl}`).then((result) => {
                 obsAuth = result
                 console.log(result)
+                res.send(result)
                 OBS.connect(`wss://${ngrokUrl}`, req.body.password.toString(), result).then((response) => {
                     OBS.call('GetRecordDirectory').then((response) => {
                         res.status(201).send(response)
