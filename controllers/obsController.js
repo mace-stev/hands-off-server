@@ -14,7 +14,7 @@ exports.OBS = async (req, res) => {
         const ngrok = new Ngrok({ apiToken: apiToken })
         let tunnelAdr
         const tunnel = await ngrokCli.connect({
-            addr: `localhost:${req.body.obsPort.toString()}`,
+            addr: `${req.body.obsPort.toString()}`,
             authtoken: process.env.NGROK_AUTHTOKEN,
             domain: 'myapptest.ngrok.app'
 
