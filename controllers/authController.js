@@ -10,7 +10,7 @@ exports.categories = (req, res) => {
     const categories = [];
     const verifiedToken=jwt.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY)
       result['id']=verifiedToken['id'][0]['id']
-      result['obsPort']=verifiedToken['obsPort'][0]['obsPort']
+      result['obsDomain']=verifiedToken['obsDomain'][0]['obsDomain']
      
       
     axios.get(`https://youtube.googleapis.com/youtube/v3/videoCategories?part=snippet&regionCode=US&key=${process.env.API_KEY}`)
@@ -37,11 +37,11 @@ exports.categories = (req, res) => {
 }
 exports.verify = async (req, res) => {
   const id = await knex('user-profile').select('id').where('username', req.body.username)
-  const obsPort= await knex('user-profile').select('obsPort').where('username', req.body.username)
+  const obsDomain= await knex('user-profile').select('obsDomain').where('username', req.body.username)
  
-  function generateJWTToken(userId, port, url) {
+  function generateJWTToken(userId, domain) {
     const token = jwt.sign({ id: userId,
-    obsPort: port}, process.env.SECRET_KEY, {
+    obsDomain: domain}, process.env.SECRET_KEY, {
       expiresIn: '1h',
     });
     return token;
@@ -52,7 +52,7 @@ exports.verify = async (req, res) => {
     const hash = await bcrypt.hash(req.body.stateToHash.toString(), 16)
 
     if (isPasswordMatch) {
-      res.setHeader('Authorization', `Bearer ${generateJWTToken(id, obsPort)}`);
+      res.setHeader('Authorization', `Bearer ${generateJWTToken(id, obsDomain)}`);
       res.status(200).send(hash);
     } else {
       res.status(401).send('Invalid credentials');

@@ -8,29 +8,15 @@ const ngrokCli = require('@ngrok/ngrok')
 
 
 exports.OBS = async (req, res) => {
-    let ngrokUrl
+    let obsDomain
     if (jwt.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY)) {
-        const apiToken = process.env.NGROK_APITOKEN
-        const ngrok = new Ngrok({ apiToken: apiToken })
-        let tunnelAdr
-        const tunnel = await ngrokCli.connect({
-            addr: `${req.body.obsPort.toString()}`,
-            authtoken: process.env.NGROK_AUTHTOKEN,
-            domain: 'myapptest.ngrok.app'
-
-
-        }).catch((error) => { console.log(error) })
-        console.log(`Ngrok tunnel started: ${tunnel.url()}`)
-        let store = tunnel.url().split("/");
-        ngrokUrl = store[2]
-
+       
         try {
-            console.log(`wss://${ngrokUrl}`)
-
-            OBS.createConnection(`wss://${ngrokUrl}`).then((result) => {
+            obsDomain=req.body.obsDomain.toString()
+            OBS.createConnection(`wss://${obsDomain}`).then((result) => {
                 obsAuth = result
                 console.log(result)
-                OBS.connect(`wss://${ngrokUrl}`, req.body.password.toString(), result).then((response) => {
+                OBS.connect(`wss://${obsDomain}`, req.body.password.toString(), result).then((response) => {
                     OBS.call('GetRecordDirectory').then((response) => {
                         res.status(201).send(response)
                     }).catch((error) => {
