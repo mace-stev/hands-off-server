@@ -1,11 +1,44 @@
 {
   "name": "hands-off",
   "version": "0.1.0",
+  "description": "An app to help streamers quickly release and claim their content",
   "private": true,
-  "engines": {
+  "main": "public/electron.js",
+  "author": "https://github.com/mace-stev",
+    "engines": {
     "node": "v18.17.1"
   },
-  "dependencies": {
+  "build": {
+    "includeSubNodeModules": true,
+    "directories":{
+  "output": "dist"
+    },
+    "signIgnore": true,
+    "files": [
+      "package.json",
+      {
+        "from":"./public",
+        "to": "public",
+        "filter": ["**/*"]
+      },
+      {
+        "from": "./controllers",
+        "to": "controllers",
+        "filter": ["**/*"]
+      },
+      {
+        "from": "./routes",
+        "to": "routes",
+        "filter": ["**/*"]
+      },
+      {
+        "from": "./knexfile.js",
+        "to": "knexfile.js",
+        "filter": ["**/*"]
+      }
+    ]
+  },
+  "devDependencies": {
     "@mysql/xdevapi": "^8.0.35",
     "@ngrok/ngrok": "^0.9.1",
     "@ngrok/ngrok-api": "^0.10.0",
@@ -18,7 +51,8 @@
     "cli-progress": "^3.12.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
-    "electron": "^26.6.1",
+    "electron": "^26.6.3",
+    "electron-builder": "^24.9.1",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.3",
     "form-data": "^4.0.0",
@@ -31,10 +65,6 @@
     "nodemon": "^3.0.1",
     "nth-check": "^2.1.1",
     "obs-websocket-js": "^5.0.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "react-select": "^5.8.0",
     "run": "^1.4.0",
     "svgo": "^3.0.4",
     "tls": "^0.0.1",
@@ -43,21 +73,17 @@
     "ws": "^8.14.2"
   },
   "scripts": {
-    "start": "npm run server",
-    "server": "node index.js",
-    "build": "npm i && cd hands-off-frontend && npm i && npm run build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start:electron": "electron .",
+    "start": "npm run start:electron",
+    "build:frontend": "cd hands-off-frontend && npm install && npm run build",
+    "build:electron": "electron-builder --publish never ",
+    "build": "npm install && npm run build:frontend && npm run build:electron",
     "migrate": "knex migrate:latest",
     "migrate:down": "knex migrate:down",
     "migrate:rollback": "knex migrate:rollback"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
+  
+ 
   "browserslist": {
     "production": [
       ">0.2%",

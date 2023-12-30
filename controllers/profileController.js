@@ -30,7 +30,7 @@ exports.editProfile = async (req, res) => {
   try {
     if (jwt.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY)) {
       const verifiedToken = jwt.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY);
-      const ableToChange = ['obsDomain', 'social-links'];
+      const ableToChange = ['obsPort', 'social-links'];
       const elementsChanged = [];
       let data = Object.keys(req.body);
       console.log(data);

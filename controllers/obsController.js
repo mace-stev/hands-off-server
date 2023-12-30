@@ -8,15 +8,15 @@ const ngrokCli = require('@ngrok/ngrok')
 
 
 exports.OBS = async (req, res) => {
-    let obsDomain
+    let obsPort
     if (jwt.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY)) {
        
         try {
-            obsDomain=req.body.obsDomain.toString()
-            OBS.createConnection(`wss://${obsDomain}`).then((result) => {
+            obsPort=req.body.obsPort.toString()
+            OBS.createConnection(`ws://localhost:${obsPort}`).then((result) => {
                 obsAuth = result
                 console.log(result)
-                OBS.connect(`wss://${obsDomain}`, req.body.password.toString(), result).then((response) => {
+                OBS.connect(`ws://localhost:${obsPort}`, req.body.password.toString(), result).then((response) => {
                     OBS.call('GetRecordDirectory').then((response) => {
                         res.status(201).send(response)
                     }).catch((error) => {
@@ -45,8 +45,9 @@ exports.streamStatus = async (req, res) => {
 
     setTimeout(() => {
       
-        OBS.on('StreamStateChanged', (data) => {
-            let message = `data: ${data.outputState}\r\n\r\n`;
+        OBS.on('RecordStateChanged', (data) => {
+            console.log(data)
+            let message = `data: ${data.outputPath}\r\n\r\n`;
             if(data.outputState === 'OBS_WEBSOCKET_OUTPUT_STOPPING') {
                 // Build the event message chunk by chunk
                 message = `data: streamStopped\r\n\r\n`;
