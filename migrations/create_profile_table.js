@@ -2,8 +2,7 @@ const { v4: uuidv4} = require("uuid");
 exports.up = function (knex){
     return knex.schema.createTable('user-profile', (table) => {
         table.uuid('id').primary();
-        table.string('obsPort');
-        table.string('obsUrl');
+        table.string('obsPort/Domain');
         table.string('username').notNullable();
         table.string('social-links');
         table.string('#').notNullable();
