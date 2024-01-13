@@ -1,70 +1,39 @@
-# Getting Started with Create React App
+# [Hands-Off](https://www.hands-off.app) 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the repo I used to create my website located at the link above. I created this site in order to help one of my favorite content-creators prevent from getting their streams stolen by bots.
+The idea of the site is to quickly and securely upload a stream as soon as the stream ends while still providing some customization for the streams.
 
-## Available Scripts
+## Supported Platforms
 
-In the project directory, you can run:
+Currently the site supports [![OBS](https://img.shields.io/badge/OBS-Open%20Broadcaster%20Software-282c34?style=flat&logo=obs-studio)](https://obsproject.com/), ![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=plastic&logo=YouTube&logoColor=white), and ![Twitch](https://img.shields.io/badge/Twitch-9347FF?style=plastic&logo=twitch&logoColor=white).
 
-### `npm start`
+### Technology Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Frontend**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
++ ![React](https://img.shields.io/badge/react-%2320232a.svg?style=plastic&logo=react&logoColor=%2361DAFB): A modern JavaScript library for building user interfaces. It allows for creating dynamic and interactive web applications.
++ ![React Router DOM](https://img.shields.io/badge/React_Router-CA4245?style=flat&logo=react-router&logoColor=white): Enables seamless client-side routing for easy navigation between different pages within your application.
++ **React Select**: Provides a user-friendly dropdown component with filtering and autocomplete functionalities for enhanced usability.
++ ![SASS](https://img.shields.io/badge/SASS-hotpink.svg?style=plastic&logo=SASS&logoColor=white): A powerful CSS preprocessor that streamlines writing maintainable and efficient styles.
 
-### `npm test`
+**Backend**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
++ ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=plastic&logo=node.js&logoColor=white): A highly efficient JavaScript runtime environment that empowers server-side operations. It enables your application to process data, communicate with databases, and handle user requests.
++ ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=plastic&logo=express&logoColor=%2361DAFB): A popular web framework for building scalable and secure APIs. It simplifies setting up server-side logic and handling different routes within your application.
++ ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=plastic&logo=mysql&logoColor=white): A robust and reliable database management system for storing your project's data securely and efficiently.
++ **Knex**: A powerful query builder for interacting with your MySQL database with ease. It reduces the need for writing complex SQL queries directly.
++ ![JWT](https://img.shields.io/badge/JWT-black?style=plastic&logo=JSON%20web%20tokens): Enables secure authentication and authorization mechanisms for users accessing your application.
++ **WebSockets**: A real-time communication protocol that allows for instant updates and interactions between your application and users. This can be valuable for features like chat or live streaming.
++ **OBS-WebSocket-JS**: A dedicated library for controlling OBS Studio through WebSockets. This facilitates seamless integration with streaming software within your project.
++ **Axios**: Simplifies making HTTP requests for fetching data and interacting with APIs from your backend code.
++ **Bcrypt**: Provides secure password hashing for protecting user credentials stored in your database.
 
-### `npm run build`
+### Looking back
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+This project is my capstone for the coding bootcamp Brainstation; we were originally only given like a month to complete them or at least make something presentable, but I'm only just now comfortable
+showing this project. Going into this I had no idea how difficult this would be especially because I feel like as a consumer I take a lot of things I interact with for granted. Youtube for example, the UI makes things like uploading a video deceptively easy, but uploading videos via Youtube's API without their libraries providing functions to do everything proved to be pretty difficult to say the least. The technologies I was experienced with going into this were Node, Express, MySQL, Knex, Axios, React, and Sass, but I had to learn everything else from scratch; I'd say the most challenging things to learn had to be using websockets and especially anything having to do with security like ssl, JWT, tunneling, wss, state variables, and access tokens simply because most of the time when something wouldn't work the issue would turn out to be a security issue such as chrome requiring websockets to connect with wss.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Demo
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+https://youtu.be/JMVAm1Lmdyc
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

@@ -62,3 +62,37 @@ exports.verify = async (req, res) => {
     res.status(500).send('Internal server error');
   }
 };
+
+exports.tokenValid = async(req, res) =>{
+  const verifyResetToken = async (resetToken) => {
+    try {
+      const query = 'SELECT `id` FROM `user-profile` WHERE resetToken = ? AND resetTokenExpiration >= NOW() LIMIT 1';
+  
+      const result = await knex.raw(query, [resetToken]); // Use parameter binding
+  
+      if (result.rows.length > 0) {
+        return result;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.error('Error verifying reset token:', error);
+      throw error;
+    }
+  };
+  
+  // Example usage
+  const resetToken = req.body.resetToken
+  const isTokenValid = await verifyResetToken(resetToken);
+  
+  if (isTokenValid!==false) {
+    const token = jwt.sign({ id: isTokenValid}, process.env.SECRET_KEY, {
+        expiresIn: '1h',
+      });
+      
+      res.setHeader('Authorization', `Bearer ${token}`);
+      res.status(200).send(true);
+  } else {
+  res.json(false)
+  }
+}
