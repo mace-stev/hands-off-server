@@ -97,13 +97,14 @@ exports.forgotPassword = async (req, res) => {
 
     // Send a password reset email
     const resetLink = `https://www.hands-off.app/reset-password/${resetToken}`;
-    await transporter.sendMail({
+    let info =await transporter.sendMail({
       from: `noreply@${mailertogo_domain}`,
       to: userEmail,
       subject: 'Password Reset Request',
       text: `Click the following link to reset your password: ${resetLink}`,
+      html: `Click the following link to reset your password: ${resetLink}`
     });
-
+    console.log("Message sent: %s", info.messageId);
     res.json({ message: 'Password reset email sent.' });
   } catch (error) {
     console.error(error);
