@@ -9,12 +9,19 @@ let mailertogo_domain= process.env.MAILERTOGO_DOMAIN
 const transporter = nodemailer.createTransport({
   name: mailertogo_domain,
   host: mailertogo_host,
-  port: mailertogo_port,
+  port: 587,
   requireTLS: true, // Must use STARTTLS
   auth: {
     user: mailertogo_user,
     pass: mailertogo_password,
   },
 });
+transporter.verify(function (error, success) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Server is ready to take our messages");
+    }
+  });
 
 module.exports = transporter;
