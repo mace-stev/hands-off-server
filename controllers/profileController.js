@@ -2,8 +2,9 @@ const bcrypt = require('bcrypt');
 const knex = require('knex')(require('../knexfile'));
 const { v4: uuidv4 } = require("uuid");
 const jwt = require('jsonwebtoken');
-const nodemailer = require("nodemailer");
 const crypto = require('crypto')
+const nodemailer = require('nodemailer');
+const transporter=require('../transporter')
 
 exports.signup = async (req, res) => {
   const salt = await bcrypt.genSalt(12);
@@ -51,35 +52,15 @@ exports.editProfile = async (req, res) => {
 
 
 
-function createTransporter() {
-  // Get Mailer To Go SMTP connection details
-  let mailertogo_host = process.env.MAILERTOGO_SMTP_HOST;
-  let mailertogo_port = process.env.MAILERTOGO_SMTP_PORT || 587;
-  let mailertogo_user = process.env.MAILERTOGO_SMTP_USER;
-  let mailertogo_password = process.env.MAILERTOGO_SMTP_PASSWORD;
-  let mailertogo_domain   = process.env.MAILERTOGO_DOMAIN || "mydomain.com";
 
-
-  // create reusable transporter object using the default SMTP transport
-  return nodemailer.createTransport({
-    host: mailertogo_host,
-    port: mailertogo_port,
-    requireTLS: true, // Must use STARTTLS
-    auth: {
-      user: mailertogo_user,
-      pass: mailertogo_password,
-    },
-  });
-}
 
 exports.forgotPassword = async (req, res) => {
-  let mailertogo_domain   = process.env.MAILERTOGO_DOMAIN || "mydomain.com";
+  let mailertogo_domain= process.env.MAILERTOGO_DOMAIN
   try {
     const user = await knex.raw('SELECT `username` from `user-profile` WHERE `email`= ?', [req.body.email]);
     if (!user || !user.length) {
       return res.status(404).json({ message: 'User not found.' });
     }
-
     // Continue with the password reset process...
     console.log(user)
     // Generate a unique token
@@ -93,7 +74,6 @@ exports.forgotPassword = async (req, res) => {
     const userEmail = req.body.email.toString(); // Adjust this based on your actual data structure
     console.log(userEmail)
     // Create a transporter
-    const transporter = createTransporter();
 
     // Send a password reset email
     const resetLink = `https://www.hands-off.app/reset-password/${resetToken}`;
@@ -103,8 +83,9 @@ exports.forgotPassword = async (req, res) => {
       subject: 'Password Reset Request',
       text: `Click the following link to reset your password: ${resetLink}`,
       html: `Click the following link to reset your password: ${resetLink}`
-    });
-    console.log("Message sent: %s", info.messageId);
+    }).then((response)=>{
+      console.log(response)
+    }).catch((error)=>{console.log(error)});
     res.json({ message: 'Password reset email sent.' });
   } catch (error) {
     console.error(error);
