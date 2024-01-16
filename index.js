@@ -45,6 +45,9 @@ app.use('/post', (req, res) => {
 app.use('/sites', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'hands-off-frontend', 'build', 'index.html'));
 });
+app.use('/reset-password/:resetToken', (req, res) =>{
+  res.sendFile(path.resolve(__dirname, 'hands-off-frontend', 'build', 'index.html'));
+})
 console.log("starting")
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

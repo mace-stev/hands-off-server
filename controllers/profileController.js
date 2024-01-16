@@ -6,6 +6,7 @@ const crypto = require('crypto')
 const nodemailer = require('nodemailer');
 const transporter=require('../transporter')
 
+
 exports.signup = async (req, res) => {
   const salt = await bcrypt.genSalt(12);
   const hash = await bcrypt.hash(req.body.password, salt);
@@ -55,7 +56,7 @@ exports.editProfile = async (req, res) => {
 
 
 exports.forgotPassword = async (req, res) => {
-  let mailertogo_domain= process.env.MAILERTOGO_DOMAIN
+  let cloudmailin_domain= process.env.CLOUDMAILIN_DOMAIN
   try {
     const user = await knex.raw('SELECT `username` from `user-profile` WHERE `email`= ?', [req.body.email]);
     if (!user || !user.length) {
@@ -78,14 +79,14 @@ exports.forgotPassword = async (req, res) => {
     // Send a password reset email
     const resetLink = `https://www.hands-off.app/reset-password/${resetToken}`;
     let info =await transporter.sendMail({
-      from: `noreply@${mailertogo_domain}`,
+      from: `noreply@${cloudmailin_domain}`,
       to: userEmail,
       subject: 'Password Reset Request',
       text: `Click the following link to reset your password: ${resetLink}`,
-      html: `Click the following link to reset your password: ${resetLink}`
-    }).then((response)=>{
-      console.log(response)
-    }).catch((error)=>{console.log(error)});
+      html: `Click the following link to reset your password: ${resetLink}`,
+      headers: { 'x-cloudmta-class': 'standard' }
+    })
+    console.log("Message sent: %s", info.response);
     res.json({ message: 'Password reset email sent.' });
   } catch (error) {
     console.error(error);
