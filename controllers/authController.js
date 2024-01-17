@@ -50,6 +50,7 @@ exports.verify = async (req, res) => {
   }
   try {
     const [data] = await knex.raw('SELECT `#` FROM `user-profile` WHERE username = ?', req.body.username)
+    console.log(data)
     const isPasswordMatch = await bcrypt.compare(req.body.password, data[0]['#']);
     const hash = await bcrypt.hash(req.body.stateToHash.toString(), 16)
 
@@ -66,35 +67,29 @@ exports.verify = async (req, res) => {
 };
 
 exports.tokenValid = async (req, res) => {
-  if (req.body.resetToken) {
-    const verifyResetToken = async (resetToken) => {
-      try {
-        const query = 'SELECT `id` FROM `user-profile` WHERE resetToken = ? AND resetTokenExpiration >= NOW() LIMIT 1';
+ 
 
-        const result = await knex.raw(query, [resetToken]); // Use parameter binding
+    try {
+      const [id] = await knex.raw('SELECT `id` FROM `user-profile` WHERE resetToken = ? AND resetTokenExpiration >= UNIX_TIMESTAMP(NOW()) * 1000', req.body.resetToken);
+      console.log(id)
 
-        if (result && result.rows?.length > 0) {
-          return result;
-        } else {
-          return false;
-        }
-      } catch (error) {
-        console.error('Error verifying reset token:', error);
-        throw error;
+      const result = id[0]['id']; // Use parameter binding
+      console.log(result)
+
+      if (result && result.length > 0) {
+        
+          const token = jwt.sign({ id: result }, process.env.SECRET_KEY, {
+            expiresIn: '1h',
+          });
+          res.setHeader('Authorization', `Bearer ${token}`);
+          res.status(200).send(true);
+        
+      } else {
+        res.status(400).send("Token isn't valid")
       }
-    };
-
-    const resetToken = req.body.resetToken
-    const isTokenValid = await verifyResetToken(resetToken);
-
-    if (isTokenValid !== false) {
-      const token = jwt.sign({ id: isTokenValid }, process.env.SECRET_KEY, {
-        expiresIn: '1h',
-      });
-      res.setHeader('Authorization', `Bearer ${token}`);
-      res.status(200).send(true);
-    } else {
-      res.status(400).send("Token isn't valid")
+    } catch (error) {
+      console.error('Error verifying reset token:', error);
+      throw error;
     }
   }
-}
+

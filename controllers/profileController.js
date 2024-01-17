@@ -67,13 +67,12 @@ exports.forgotPassword = async (req, res) => {
     // Generate a unique token
     const username = user[0][0].username;
     const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetTokenExpiration = Date.now() + 60 * 30 * 1000
+    const resetTokenExpiration = Date.now() + 30 * 60 * 1000;
     await knex.transaction(async trx => {
       await trx.raw('UPDATE `user-profile` SET resetToken = ?, resetTokenExpiration = ? WHERE `username` = ?', [resetToken, resetTokenExpiration, username]);
     });
     // Get the email address of the user
-    const userEmail = req.body.email.toString(); // Adjust this based on your actual data structure
-    console.log(userEmail)
+    const userEmail = req.body.email.toString(); 
     // Create a transporter
 
     // Send a password reset email
@@ -100,8 +99,9 @@ exports.resetPassword = async (req, res) => {
       const salt = await bcrypt.genSalt(12);
       const hash = await bcrypt.hash(req.body.password, salt);
       const verifiedToken = jwt.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY);
-      const userId = verifiedToken['id'][0]['id'];
-      await knex.raw('UPDATE `user-profile` SET `#` = ? WHERE id = ?', [hash, userId]);
+      const userId = verifiedToken['id']
+      const result=await knex.raw('UPDATE `user-profile` SET `#` = ? WHERE id = ?',[ hash, userId ]);
+  
       res.status(200).send("password updated");
     }
     catch (error) {
