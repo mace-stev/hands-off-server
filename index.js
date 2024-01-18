@@ -1,20 +1,21 @@
-const express=require('express');
+const express = require('express');
 const app = express();
-const cors= require('cors')
+const cors = require('cors')
 const knex = require('knex')(require('./knexfile'));
 app.use(cors());
 const path = require('path');
 require('dotenv').config()
 app.use(express.urlencoded({ extended: true }));
 const multer = require('multer');
-const videoRoutes=require('./routes/videosRoute')
-const profileRoutes=require('./routes/profileRoute')
-const authRoutes=require("./routes/authRoute")
-const obsRoutes=require("./routes/obsRoute")
-const port= process.env.PORT || 3000
+const videoRoutes = require('./routes/videosRoute')
+const profileRoutes = require('./routes/profileRoute');
+const authRoutes = require("./routes/authRoute")
+const obsRoutes = require("./routes/obsRoute")
+const port = process.env.PORT || 3000
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const staticMiddleware = express.static(path.resolve(__dirname, 'hands-off-frontend', 'build'));
+
 app.use(express.json());
 app.use('/api', upload.single('video'), videoRoutes);
 app.use('/api', profileRoutes)
@@ -44,7 +45,10 @@ app.use('/post', (req, res) => {
 app.use('/sites', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'hands-off-frontend', 'build', 'index.html'));
 });
+app.use('/reset-password/:resetToken', (req, res) =>{
+  res.sendFile(path.resolve(__dirname, 'hands-off-frontend', 'build', 'index.html'));
+})
 console.log("starting")
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
