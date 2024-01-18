@@ -67,29 +67,29 @@ exports.verify = async (req, res) => {
 };
 
 exports.tokenValid = async (req, res) => {
- 
 
-    try {
-      const [id] = await knex.raw('SELECT `id` FROM `user-profile` WHERE resetToken = ? AND resetTokenExpiration >= UNIX_TIMESTAMP(NOW()) * 1000', req.body.resetToken);
-      console.log(id)
 
-      const result = id[0]['id']; // Use parameter binding
-      console.log(result)
+  try {
+    const [id] = await knex.raw('SELECT `id` FROM `user-profile` WHERE resetToken = ? AND resetTokenExpiration >= UNIX_TIMESTAMP(NOW()) * 1000', req.body.resetToken);
 
-      if (result && result.length > 0) {
-        
-          const token = jwt.sign({ id: result }, process.env.SECRET_KEY, {
-            expiresIn: '1h',
-          });
-          res.setHeader('Authorization', `Bearer ${token}`);
-          res.status(200).send(true);
-        
-      } else {
-        res.status(400).send("Token isn't valid")
-      }
-    } catch (error) {
-      console.error('Error verifying reset token:', error);
-      throw error;
+
+    const result = id[0]['id']; // Use parameter binding
+
+
+    if (result && result.length > 0) {
+
+      const token = jwt.sign({ id: result }, process.env.SECRET_KEY, {
+        expiresIn: '1h',
+      });
+      res.setHeader('Authorization', `Bearer ${token}`);
+      res.status(200).send(true);
+
+    } else {
+      res.status(400).send("Token isn't valid")
     }
+  } catch (error) {
+    console.error('Error verifying reset token:', error);
+    throw error;
   }
+}
 

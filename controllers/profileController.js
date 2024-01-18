@@ -62,9 +62,7 @@ exports.forgotPassword = async (req, res) => {
     if (!user || !user.length) {
       return res.status(404).json({ message: 'User not found.' });
     }
-    // Continue with the password reset process...
-    console.log(user)
-    // Generate a unique token
+  
     const username = user[0][0].username;
     const resetToken = crypto.randomBytes(32).toString('hex');
     const resetTokenExpiration = Date.now() + 30 * 60 * 1000;
@@ -100,8 +98,9 @@ exports.resetPassword = async (req, res) => {
       const hash = await bcrypt.hash(req.body.password, salt);
       const verifiedToken = jwt.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY);
       const userId = verifiedToken['id']
-      const result=await knex.raw('UPDATE `user-profile` SET `#` = ? WHERE id = ?',[ hash, userId ]);
-  
+      await knex.transaction(async trx => {
+        await trx.raw('UPDATE `user-profile` SET `#` = ?, resetToken = ?, resetTokenExpiration = ? WHERE id = ?',[ hash, null, null, userId ]);
+      })
       res.status(200).send("password updated");
     }
     catch (error) {
