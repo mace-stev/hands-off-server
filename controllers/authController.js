@@ -10,6 +10,7 @@ exports.categories = (req, res) => {
     const verifiedToken = jwt.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY)
     result['id'] = verifiedToken['id'][0]['id']
     result['obsPort/Domain'] = verifiedToken['obsPort/Domain'][0]['obsPort/Domain']
+    
 
 
     axios.get(`https://youtube.googleapis.com/youtube/v3/videoCategories?part=snippet&regionCode=US&key=${process.env.API_KEY}`)
