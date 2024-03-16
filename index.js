@@ -7,6 +7,7 @@ const path = require('path');
 require('dotenv').config()
 app.use(express.urlencoded({ extended: true }));
 const multer = require('multer');
+const rateLimit = require('express-rate-limit');
 const videoRoutes = require('./routes/videosRoute')
 const profileRoutes = require('./routes/profileRoute');
 const authRoutes = require("./routes/authRoute")
@@ -15,8 +16,14 @@ const port = process.env.PORT || 3000
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const staticMiddleware = express.static(path.resolve(__dirname, 'hands-off-frontend', 'build'));
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000, 
+  max: 50, 
+  message: 'Too many requests from this IP, please try again after 5 minutes',
+});
 
 app.use(express.json());
+app.use(limiter)
 app.use('/api', upload.single('video'), videoRoutes);
 app.use('/api', profileRoutes)
 app.use('/api', authRoutes)
