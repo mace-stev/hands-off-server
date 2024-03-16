@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const { default: OBSWebSocket } = require('obs-websocket-js');
-const OBS = new OBSWebSocket()
+const OBS = new OBSWebSocket();
+const crypto = require('crypto');
+const { response } = require('express');
 
 
 
@@ -9,22 +11,18 @@ exports.OBS = async (req, res) => {
     if (jwt.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY)) {
 
         try {
-            obsDomain = req.body["obsPort/Domain"].toString()
-            OBS.createConnection(`wss://${obsDomain}`).then((result) => {
-                obsAuth = result
-                console.log(result)
-                OBS.connect(`wss://${obsDomain}`, req.body.password.toString(), result).then((response) => {
-                    OBS.call('GetRecordDirectory').then((response) => {
-                        res.status(201).send(response)
-                    }).catch((error) => {
-                        console.log(error)
-                    })
-                }).catch((error) => {
-                    console.log(error)
+            const obsDomain = req.body["obsPort/Domain"].toString();
+            const websocketPassword = req.body["password"].toString();
+
+           
+
+            OBS.connect(`wss://${obsDomain}`, websocketPassword)
+                .then(async (response) => {
+                    console.log("Connected to OBS WebSocket server!");
+
+                   res.status(201).send("Connected to OBS WebSocket server!")
+
                 })
-            }).catch((error) => {
-                console.log(error)
-            });
         } catch (error) {
             console.error('Error connecting to OBS:', error);
             res.status(500).send('Failed to connect to OBS');
@@ -42,7 +40,6 @@ exports.streamStatus = async (req, res) => {
     };
 
     OBS.on('RecordStateChanged', (data) => {
-        console.log(data);
 
         let message;
 
