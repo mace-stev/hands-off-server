@@ -7,7 +7,7 @@ const path = require('path');
 require('dotenv').config()
 app.use(express.urlencoded({ extended: true }));
 const multer = require('multer');
-const rateLimit = require('express-rate-limit');
+const {rateLimit} = require('express-rate-limit');
 const videoRoutes = require('./routes/videosRoute')
 const profileRoutes = require('./routes/profileRoute');
 const authRoutes = require("./routes/authRoute")
@@ -65,3 +65,4 @@ console.log("starting")
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+module.exports=app;
