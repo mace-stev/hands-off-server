@@ -48,7 +48,7 @@
     "start": "npm run server",
     "server": "node index.js",
     "build": "npm i && cd hands-off-frontend && npm i && npm run build",
-    "test": "jest",
+    "test": "cd hands-off-frontend && npm test",
     "eject": "react-scripts eject",
     "migrate": "knex migrate:latest",
     "migrate:down": "knex migrate:down",
@@ -73,7 +73,7 @@
     ]
   },
   "devDependencies": {
-    "jest": "^29.7.0",
+    "@babel/plugin-transform-private-property-in-object": "^7.24.1",
     "jest-mock-axios": "^4.7.3",
     "supertest": "^6.3.4"
   }
