@@ -8,12 +8,8 @@ const jwt = require('jsonwebtoken')
 
 exports.recording = (req, res) => {
   if (jwt.verify(req.headers.authorization.split(" ")[2], process.env.SECRET_KEY)) {
-    let fileData = [];
-    const stats = [];
     const postData = req.body;
-    console.log(req.body);
     const videoBuffer = req.file.buffer;
-    console.log(JSON.parse(req.body.snippetData))
     
     axios.defaults.headers.common = null;
     const url = 'https://www.googleapis.com/upload/youtube/v3/videos';
