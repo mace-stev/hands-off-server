@@ -51,7 +51,6 @@ exports.verify = async (req, res) => {
   }
   try {
     const [data] = await knex.raw('SELECT `#` FROM `user-profile` WHERE username = ?', req.body.username)
-    console.log(data)
     const isPasswordMatch = await bcrypt.compare(req.body.password, data[0]['#']);
     const hash = await bcrypt.hash(req.body.stateToHash.toString(), 16)
 

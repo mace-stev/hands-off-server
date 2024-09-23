@@ -7,7 +7,6 @@ const { response } = require('express');
 
 
 exports.OBS = async (req, res) => {
-    let obsDomain
     if (jwt.verify(req.headers.authorization.split(" ")[1], process.env.SECRET_KEY)) {
 
         try {
@@ -33,8 +32,6 @@ exports.streamStatus = async (req, res) => {
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('Content-Type', 'text/event-stream');
 
-    // ... your logic ...
-
     const sendEvent = (message) => {
         res.write(message);
     };
@@ -52,5 +49,4 @@ exports.streamStatus = async (req, res) => {
         sendEvent(message);
     });
 
-    // ... other event logic ...
 };
